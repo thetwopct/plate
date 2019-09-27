@@ -7,7 +7,7 @@
 
 <h1 id="platebystudio.bio">Plate by studio.bio</h1>
 
-<p><a href="https://github.com/joshuaiz/plate/releases/tag/v1.2.5"><img src="https://img.shields.io/github/release/joshuaiz/plate.svg" alt="Github Releases" /></a>
+<p><a href="https://github.com/joshuaiz/plate/releases/tag/v1.4.0"><img src="https://img.shields.io/github/release/joshuaiz/plate.svg" alt="Github Releases" /></a>
 <a href=""><img src="https://img.shields.io/github/last-commit/joshuaiz/plate.svg" alt="Github Last Commit" /></a>
 <a href="https://github.com/joshuaiz/plate/issues"><img src="https://img.shields.io/github/issues/joshuaiz/plate.svg" alt="GitHub issues" /></a>
 <a href="https://github.com/joshuaiz/plate/network"><img src="https://img.shields.io/github/forks/joshuaiz/plate.svg" alt="GitHub forks" /></a>
@@ -19,7 +19,7 @@
 
 <h2 id="asuperstripped-downwordpressstarterthemefordevelopers.">A super stripped-down WordPress starter theme for developers.</h2>
 
-<p><img src="https://studio.bio/images/plate_home_page_2018.png" alt="" />
+<p><img src="https://studio.bio/images/plate_home_2019.png" alt="" />
 <em>Plate Home page with sidebar showing CSS Grid layout blocks.
 It&#8217;s almost as if it is not even there. (The colors are just for development to see your grid and are easily removed)</em></p>
 
@@ -27,17 +27,33 @@ It&#8217;s almost as if it is not even there. (The colors are just for developme
 
 <p>Download or clone into your <code>/wp-content/themes/</code> folder and activate the theme in the WordPress admin in <code>Appearance &gt; Themes</code>.</p>
 
-<p>Plate uses modular Sass/SCSS files with CSS media queries that map to the default HTML elements in the theme, providing a quick way to get a project up-and-running. You may not need all of the supplied classes to style your theme, so just delete what you don&#8217;t use.</p>
+<p>Plate uses modular Sass/SCSS files with CSS media queries that map to the default HTML elements in the theme, providing a quick way to get a project up-and-running. You may not need all of the supplied classes to style your theme, so just delete what you don&#8217;t use. On the other hand, if you need to style the user name for nested comments 3 levels deep, Plate is ready.</p>
 
-<p>On the other hand, if you need to style the user name for nested comments 3 levels deep, Plate is ready.</p>
+<p>You can find the modular scss files in <code>library/scss/</code> and then further broken down into <code>/breakpoints</code> for our most-used media queries, <code>/modules</code> for buttons, alerts, and forms and then <code>/partials</code> for grids, typography, functions, variables and anything else.</p>
 
-<p><strong>Note:</strong> You will need to use a pre-processor to compile <code>.scss</code> (Sass) into <code>CSS</code>. We recommend <a href="https://codekitapp.com">CodeKit</a>. Just drop your theme into CodeKit and you&#8217;re all set. No configuration necessary. We love CodeKit <code>&lt;&gt;</code>.</p>
+<p>All of the stylesheets are then imported via the <code>/library/scss/style.scss</code> file which is rendered to <code>/library/css/style.css</code> via your preprocessor.</p>
+
+<p><strong>Note:</strong> You will need to use a pre-processor to compile <code>.scss</code> (Sass) into <code>CSS</code>. We recommend <a href="https://codekitapp.com">CodeKit</a>. Just drop your theme into CodeKit and you&#8217;re all set. No configuration necessary. We love CodeKit <code>&lt;/&gt;</code>.</p>
 
 <p>We also have Grunt support built-in if that&#8217;s your thang.</p>
 
-<p>From there, fire up your favorite text editor, customize the default styles or add your own, and create your own theme templates from Plate&#8217;s defaults. That&#8217;s it!</p>
+<p><code>_base.scss</code> includes styles loaded for all devices. From there you can add styles to the respective breakpoint stylesheets for the devices that will use them.</p>
+
+<p>Fire up your favorite text editor, customize the default styles or add your own, and create your own theme templates from Plate&#8217;s defaults. That&#8217;s it!</p>
 
 <p>There are lots of comments throughout the theme so we encourage you to read them to help you with development. The theme and its respective comments are updated all the time.</p>
+
+<p><strong>Pro Tip:</strong> The included <code>plate_body_class()</code> function adds page-, post-, archive-, and taxonomy-specific CSS classes to your generated theme files. Leverage those to add your custom styles globally down to a per-post/page level allowing for quick customization.</p>
+
+<p>Classes are mirrored from the templates directly to the <code>SCSS</code> files so you can start customizing right away.</p>
+
+<h2 id="whatsincludedinplate">What&#8217;s Included In Plate?</h2>
+
+<p>Plate includes all of the files any robust WordPress theme should have: default page + post templates, archive + taxonomy templates, header, footer, search as well as extra page + post templates to handle full width layouts.</p>
+
+<p>Also included is a range of template parts that you can reuse anywhere in your project.</p>
+
+<p>Use, edit and customize what you like and delete what you don&#8217;t need. It&#8217;s your thing — do what you wanna do.</p>
 
 <h4 id="🎉asofjune212018plateis1yearold">🎉 As of June 21, 2018, Plate is 1 year old!</h4>
 
@@ -46,7 +62,8 @@ It&#8217;s almost as if it is not even there. (The colors are just for developme
 <h3 id="🔘whatsnewwithplate">🔘 What&#8217;s new with Plate?</h3>
 
 <ul>
-<li>Expanded Gutenberg support (updated 12 Nov 2018)</li>
+<li>Expanded Gutenberg support (updated 23 February 2019)</li>
+<li>Full WP Customizer support</li>
 <li>Expanded accessibility features</li>
 <li>Full CSS Grid support with starter grids</li>
 <li>Updated page-navi and related posts functions</li>
@@ -79,7 +96,7 @@ It&#8217;s almost as if it is not even there. (The colors are just for developme
 
 <h3 id="🔮thefutureofplate">🔮 The Future of Plate</h3>
 
-<p><strong>Gutenberg:</strong> As the Gutenberg project gets closer to a release candidate, we are watching closely and adjusting Gutenberg support as necessary. Things have been changing rapidly although much of the Gutenberg core has been solidified. We will add styles for default blocks once they become finalized.</p>
+<p><strong>Gutenberg:</strong> Gutenberg is here! And Plate is ready. We&#8217;ve got full theme support for Gutenberg along with included classes and styles for all of the included default blocks.</p>
 
 <p><strong>CSS Grid:</strong> we are using CSS Grid on all new projects so as we get more familiar with edge cases and better default implementations, Plate will be updated accordingly.</p>
 

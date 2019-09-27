@@ -6,6 +6,44 @@ Author: Joshua Michaels for studio.bio with help from Jon Iler
 
 *******************************************************************
 
+### 1.4.3 2019-06-13
+- added `body_open()` function supporting WP 5.2 features
+- cleaned up some text encoding stuffs in some files
+
+### 1.4.2 2019-04-28
+- moved `the_title()` calls into individual templates from template parts
+- `/templates/header-title.php` is still there if you need it
+
+### 1.4.l 2019-04-13
+- Removed last few remaining cf/clearfix calls in templates
+- Added custom page template with no loop (for ACF pages)
+- Updated formatting in theme templates throughout
+- Updated Readme
+- Fixed a "not enough sunshine" issue
+
+### 1.4.0 2019-02-23
+- Lots of Gutenberg updates: front-end styles, enqueues, `theme_support`
+- updated new Gutenberg block default styles
+- WP Customizer updates: moved to separate file `/library/customizer.php`
+- updated Customizer function(s) to support latest updates
+- 1.4.0 release(!)
+- fixed an issue regarding not enough JavaScript
+
+### 1.3.9 2019-01-24
+- removed WP_DEBUG conditionals from enqueues. Why? Because you should be
+able to decide for yourself how your .scss files are outputted: minimized, not, etc.
+- minor functions.php updates
+- comment updates
+- formatting updates
+- fixed a 'no pie' issue
+
+### 1.3.8 2018-12-29
+- removed last vestiges of clearfix (although 'cf' class still exists)
+- cleaned up `editor.css` and `editor-style.css`
+- updated comments throughout
+- minor cleanup of template files
+- fixed a not enough dub reggae issue
+
 ### 1.3.7 2018-12-07
 - added new 'page-blog' and 'blogroll' classes for static posts page
 - contained 'alignfull' and 'alignwide' images on static posts page

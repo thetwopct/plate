@@ -14,15 +14,21 @@
 *
 */
 
-/* LOAD PLATE DEVELOPMENT FUNCTIONS
+/* Plate development and debug functions
 (not required but helper stuff for debugging and development)
 */
 // require_once( 'library/plate.php' );
 
-/* CUSTOMIZE THE WORDPRESS ADMIN 
+/* WordPress Admin functions (for customizing the WP Admin)
 (also not required so comment it out if you don't need it)
 */
 require_once( 'library/admin.php' );
+
+// WordPress Customizer functions and enqueues
+// include( get_template_directory_uri() . '/library/customizer.php' );
+
+require_once( 'library/customizer.php' );
+
 
 
 /************************************
@@ -31,16 +37,13 @@ require_once( 'library/admin.php' );
  * Let's get everything on the plate. Mmmmmmmm.
  * 
  ************************************/
+
 add_action( 'after_setup_theme', 'plate_lunch' );
 
 function plate_lunch() {
 
     // editor style
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        add_editor_style( get_stylesheet_directory_uri() . '/library/css/editor-style.css' );
-    } else {
-        add_editor_style( get_stylesheet_directory_uri() . '/library/css/editor-style.min.css' );
-    }
+    add_editor_style( get_stylesheet_directory_uri() . '/library/css/editor-style.css' );
 
     // let's get language support going, if you need it
     load_theme_textdomain( 'platetheme', get_template_directory() . '/library/translation' );
@@ -74,6 +77,23 @@ function plate_lunch() {
 
     // clean up the default WP excerpt
     add_filter( 'excerpt_more', 'plate_excerpt_more' );
+
+    // new body_open() function added in WP 5.2
+    // https://generatewp.com/wordpress-5-2-action-that-every-theme-should-use/
+    if ( ! function_exists( 'wp_body_open' ) ) {
+        /**
+         * Fire the wp_body_open action.
+         *
+         * Added for backwards compatibility to support WordPress versions prior to 5.2.0.
+         */
+        function wp_body_open() {
+            /**
+             * Triggered after the opening <body> tag.
+             */
+            do_action( 'wp_body_open' );
+        }
+    }
+
 
 } /* end plate lunch */
 
@@ -256,7 +276,9 @@ function plate_comments( $comment, $args, $depth ) {
             </section>
 
             <div class="comment-reply">
+
                 <?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
+                
             </div>
             
         </article>
@@ -458,9 +480,8 @@ function in case you don't need them.
 add_action( 'enqueue_block_editor_assets', 'plate_block_editor_styles' );
 
 function plate_block_editor_styles() {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        wp_enqueue_style( 'plate-block-editor-styles', get_theme_file_uri( '/library/css/editor.css' ), false, '1.0', 'all' );
-    }
+    
+    wp_enqueue_style( 'plate-block-editor-styles', get_theme_file_uri( '/library/css/editor.css' ), false, '1.0', 'all' );
 
 }
 
@@ -473,11 +494,8 @@ function plate_block_editor_styles() {
 add_action( 'enqueue_block_assets', 'plate_gutenberg_styles' );
 
 function plate_gutenberg_styles() {
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        wp_enqueue_style( 'plate-gutenberg-styles', get_theme_file_uri( '/library/css/gutenberg.css' ), false, '1.0', 'all' );
-    } else {
-        wp_enqueue_style( 'plate-gutenberg-styles', get_theme_file_uri( '/library/css/gutenberg.min.css' ), false, '1.0', 'all' );
-    }
+
+    wp_enqueue_style( 'plate-gutenberg-styles', get_theme_file_uri( '/library/css/gutenberg.css' ), false, '1.0', 'all' );
 
 }
 
@@ -564,6 +582,7 @@ function disable_emojicons_tinymce( $plugins ) {
 // Remove the p from around imgs (http://css-tricks.com/snippets/wordpress/remove-paragraph-tags-from-around-images/)
 // This only works for the main content box, not using ACF or other page builders.
 // Added small bit of javascript in scripts.js that will work everywhere. 
+// Keeping this in in case people are still using it.
 add_filter('the_content', 'plate_filter_ptags_on_images');
 
 function plate_filter_ptags_on_images( $content ) {
@@ -575,9 +594,9 @@ function plate_filter_ptags_on_images( $content ) {
 
 // Simple function to remove the [...] from excerpt and add a 'Read More �' link.
 function plate_excerpt_more($more) {
-  global $post;
-  // edit here if you like
-  return '...  <a class="excerpt-read-more" href="'. get_permalink( $post->ID ) . '" title="'. __( 'Read ', 'platetheme' ) . esc_attr( get_the_title( $post->ID ) ).'">'. __( 'Read more &raquo;', 'platetheme' ) .'</a>';
+    global $post;
+    // edit here if you like
+    return '...  <a class="excerpt-read-more" href="'. get_permalink( $post->ID ) . '" title="'. __( 'Read ', 'platetheme' ) . esc_attr( get_the_title( $post->ID ) ).'">'. __( 'Read more &raquo;', 'platetheme' ) .'</a>';
 }
 
 
@@ -610,11 +629,15 @@ function plate_theme_support() {
     // Custom Header Image
     add_theme_support( 'custom-header', array(
 
-        'default-image'          => get_template_directory_uri() . '/library/images/header-image.png',
-        'default-text-color'     => 'ffffff',
-        'header-text'            => true,
-        'uploads'                => true,
-        'wp-head-callback'       => 'plate_style_header',
+            'default-image'      => get_template_directory_uri() . '/library/images/header-image.png',
+            'default-text-color' => '000',
+            'width'              => 1440,
+            'height'             => 220,
+            'flex-width'         => true,
+            'flex-height'        => true,
+            'header-text'        => true,
+            'uploads'            => true,
+            'wp-head-callback'   => 'plate_style_header',
 
         ) 
     );
@@ -623,7 +646,7 @@ function plate_theme_support() {
     add_theme_support( 'custom-logo', array(
 
         'height'      => 100,
-        'width'       => 400,
+        'width'       => 100,
         'flex-height' => true,
         'flex-width'  => true,
         'header-text' => array( 'site-title', 'site-description' ),
@@ -738,6 +761,7 @@ function plate_theme_support() {
 
 } /* end plate theme support */
 
+
 /** 
  * $content_width.
  * 
@@ -780,107 +804,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 }
 
-
-/****************************************
-* CUSTOMIZER *
-****************************************/
-
-// Needs updating as of WP 4.9.X
-
-add_action( 'customize_register', 'plate_register_theme_customizer' );
-
-function plate_register_theme_customizer( $wp_customize ) {
-
-    // Uncomment this to see what's going on if you make a lot of changes
-    // echo '<pre>';
-    // var_dump( $wp_customize );  
-    // echo '</pre>';
-
-    // Customize title and tagline sections and labels
-    $wp_customize->get_section( 'title_tagline' )->title = __( 'Site Name and Description', 'platetheme' );  
-    $wp_customize->get_control( 'blogname' )->label = __( 'Site Name', 'platetheme' );  
-    $wp_customize->get_control( 'blogdescription' )->label = __( 'Site Description', 'platetheme' );  
-    $wp_customize->get_setting( 'blogname' )->transport = 'postMessage';
-    $wp_customize->get_setting( 'blogdescription' )->transport  = 'postMessage';
-
-    // Customize the Front Page Settings
-    $wp_customize->get_section( 'static_front_page' )->title = __( 'Homepage Preferences', 'platetheme' );
-    $wp_customize->get_section( 'static_front_page' )->priority = 20;
-    $wp_customize->get_control( 'show_on_front' )->label = __( 'Choose Homepage Preference:', 'platetheme' );  
-    $wp_customize->get_control( 'page_on_front' )->label = __( 'Select Homepage:', 'platetheme' );  
-    $wp_customize->get_control( 'page_for_posts' )->label = __( 'Select Blog Homepage:', 'platetheme' );  
-
-    // Customize Background Settings
-    $wp_customize->get_section( 'background_image' )->title = __( 'Background Styles', 'platetheme' );  
-    $wp_customize->get_control( 'background_color' )->section = 'background_image'; 
-
-    // Customize Header Image Settings  
-    $wp_customize->add_section( 'header_text_styles' , array(
-
-        'title'      => __( 'Header Text Styles', 'platetheme' ), 
-        'priority'   => 30
-
-        ) 
-    );
-
-    $wp_customize->get_control( 'display_header_text' )->section = 'header_text_styles';  
-    $wp_customize->get_control( 'header_textcolor' )->section = 'header_text_styles'; 
-    $wp_customize->get_setting( 'header_textcolor' )->transport = 'postMessage'; 
-
-}
-
-
-// Custom scripts + styles for theme customizer
-add_action( 'customize_preview_init', 'plate_customizer_scripts' );
-
-function plate_customizer_scripts() {
-
-    wp_enqueue_script( 'plate_theme_customizer', get_template_directory_uri() . '/library/js/theme-customizer.js', array( 'jquery', 'customize-preview' ), '', true);
-
-    // register customizer stylesheet
-    if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-        wp_register_style( 'plate-customizer', get_theme_file_uri() . '/library/css/customizer.css', array(), '', 'all' );
-    } else {
-        wp_register_style( 'plate-customizer', get_theme_file_uri() . '/library/css/customizer.min.css', array(), '', 'all' );
-    }
-    wp_enqueue_style( 'plate-customizer' );
-
-}
-
-
-// Callback function for updating header styles
-function plate_style_header() {
-
-    $text_color = get_header_textcolor();
-  
-    ?>
-  
-    <style type="text/css">
-
-        header.header .site-title a {
-          color: #<?php echo esc_attr( $text_color ); ?>;
-        }
-      
-        <?php if( display_header_text() != true ): ?>
-        .site-title, .site-description {
-          display: none;
-        } 
-        <?php endif; ?>
-
-        #banner .header-image {
-          max-width: 100%;
-          height: auto;
-        }
-
-        .customize-control-description {
-          font-style: normal;
-        }
-
-    </style>
-
-  <?php 
-
-}
 
 /*********************
 RELATED POSTS FUNCTION
@@ -991,12 +914,12 @@ PAGE NAVI
 * function will play nice. Example:
 * 
 * plate_page_navi( $query );
-•
-• Also make sure your query has pagination set, e.g.:
+*
+* Also make sure your query has pagination set, e.g.:
 * $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 * (or something similar)
-• See the codex: https://codex.wordpress.org/Pagination
-
+* See the codex: https://codex.wordpress.org/Pagination
+*
 */
 
 function plate_page_navi( $wp_query ) {
@@ -1050,8 +973,9 @@ function plate_body_class( $classes ) {
 
     if ( isset( $post ) ) {
 
+        /* Un comment below if you want the post_type-post_name body class */
         /* $classes[] = $post->post_type . '-' . $post->post_name; */
-        /*Un comment this if you want the post_type-post_name body class */
+        
         $pagetemplate = get_post_meta( $post->ID, '_wp_page_template', true);
         $classes[] = sanitize_html_class( str_replace( '.', '-', $pagetemplate ), '' );
         $classes[] = $post->post_name;
@@ -1217,17 +1141,16 @@ endif;
  * Customize it...yeaaaahhh...but don't criticize it.
  * 
  * 
- * 
  */
 
 function plate_add_dashboard_widgets() {
 
     // Call the built-in dashboard widget function with our callback
     wp_add_dashboard_widget(
-                'plate_dashboard_widget', // Widget slug. Also the HTML id for styling in admin.scss.
-                __( 'Welcome to Plate!', 'platetheme' ), // Title.
-                'plate_dashboard_widget_init' // Display function (below)
-        );
+        'plate_dashboard_widget', // Widget slug. Also the HTML id for styling in admin.scss.
+        __( 'Welcome to Plate!', 'platetheme' ), // Title.
+        'plate_dashboard_widget_init' // Display function (below)
+    );
 }
 add_action( 'wp_dashboard_setup', 'plate_add_dashboard_widgets' );
 
@@ -1243,13 +1166,13 @@ function plate_dashboard_widget_init() {
     echo '<p><strong>Thank you for using the <a href="https://github.com/joshuaiz/plate" target="_blank">Plate</a> theme by <a href="https://studio.bio/" target="_blank">studio.bio</a>!</strong></p>'; 
     echo '<p>You can add your own message(s) or HTML here. Edit the <code>plate_dashboard_widget_init()</code> function in <code>functions.php</code> at line 1225. Styles are in <code>admin.scss</code>. Or if you don\'t want or need this, just delete the function. Have it your way.</p>';
     echo '<p>This is a great place for site instructions, links to help or resources, and to add your contact info for clients.</p>';
-    echo '<p>Make sure to remind them about the <code>Screen Options</code> tab on the top right. Often clients do not know about that and that they can show or hide or rearrange these Dashboard Widgets.</p>';
+    echo '<p>Make sure to remind them about the <code>Screen Options</code> tab on the top right. Often clients do not know about that and that they can show or hide or rearrange these Dashboard Widgets or show/hide boxes on any edit screen.</p>';
     
 }
 
 
 // Live Reload for Grunt during development
-//If your site is running locally it will load the livereload js file into the footer. This makes it possible for the browser to reload after a change has been made. 
+// If your site is running locally it will load the livereload js file into the footer. This makes it possible for the browser to reload after a change has been made. 
 if ( in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1')) ) {
 
     function livereload_script() {

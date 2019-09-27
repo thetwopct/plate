@@ -10,12 +10,16 @@
 
 				<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
-					<article id="post-<?php the_ID(); ?>" <?php post_class('cf'); ?> role="article">
+					<article id="post-<?php the_ID(); ?>" <?php post_class('post-search-result'); ?> role="article">
 
 						<header class="entry-header article-header">
 
-							<?php get_template_part( 'templates/header', 'title'); ?>
+                            <h3 class="search-title entry-title">
 
+                            <a href="<?php the_permalink() ?>" rel="bookmark" title="<?php the_title_attribute(); ?>"><?php the_title(); ?></a>
+
+                            </h3>
+                            
           					<?php get_template_part( 'templates/byline'); ?>
 
 						</header>
@@ -50,6 +54,6 @@
 
 	</div>
 
-<?php get_sidebar(); ?>
+    <?php get_sidebar(); ?>
 
 <?php get_footer(); ?>
